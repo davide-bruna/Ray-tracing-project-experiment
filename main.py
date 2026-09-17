@@ -76,7 +76,7 @@ class Screen:
         self.x_res = x_res
         self.y_res = y_res
         self.y_size = y_size
-        self.x_size = y_size * (x_res / y_res)
+        self.x_size = int(y_size * (x_res / y_res))
         self.distance = distance
         self.pixel_size = y_size / y_res
 
@@ -90,8 +90,8 @@ class Camera:
             f.write(b"P6\n")
             f.write(f"{self.screen.x_res} {self.screen.y_res}\n".encode("ascii"))
             f.write(b"255\n")
-            for row in range(self.screen.x_res):
-                for col in range(self.screen.y_res):
+            for row in range(self.screen.y_res):
+                for col in range(self.screen.x_res):
                     f.write(bytes(self.get_pixel(row, col)))
 
     def get_pixel(self, row, col):
@@ -104,12 +104,14 @@ class Camera:
 
     def get_camera_vector(self, row, col):
         vector = ((self.screen.pixel_size * col + self.screen.pixel_size / 2 - self.screen.x_size / 2),
-                  (self.screen.pixel_size * row + self.screen.pixel_size / 2 - self.screen.y_size / 2),
+                  (-self.screen.pixel_size * row - self.screen.pixel_size / 2 + self.screen.y_size / 2),
                   -self.screen.distance)
         return vector
 
 
 cool_screen = Screen(640, 480, 3, 3)
-objects = [Sphere((-2, 1, -10), 2, (255, 100, 0), 0, 0), Sphere((0, 0, -15), 1, (255, 255, 255), 0, 155)]
+print(cool_screen.x_size, cool_screen.y_size)
+objects = [Sphere((2, -1, -10), 2, (255, 100, 0), 0, 0), Sphere((0, 0, -15), 2, (255, 255, 255), 0, 0),
+           Sphere((10, 5, -15), 3, (255, 10, 255), 0, 0)]
 camera = Camera(cool_screen)
 camera.take_picture()
