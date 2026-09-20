@@ -20,7 +20,16 @@ class Camera:
 
     def take_picture(self):
         print("Taking the picture of your scene...")
+        # this one is just to showcase, all the brighness is turned up to 1
         with open("picture.ppm", "wb") as f:
+            f.write(b"P6\n")
+            f.write(f"{self.screen.x_res} {self.screen.y_res}\n".encode("ascii"))
+            f.write(b"255\n")
+            for row in range(self.screen.y_res):
+                for col in range(self.screen.x_res):
+                    f.write(bytes(self.get_pixel(row, col, False)))
+
+        with open("RAY-TRACING.ppm", "wb") as f:
             f.write(b"P6\n")
             f.write(f"{self.screen.x_res} {self.screen.y_res}\n".encode("ascii"))
             f.write(b"255\n")
@@ -29,9 +38,9 @@ class Camera:
                     f.write(bytes(self.get_pixel(row, col)))
         print("Picture taken, check out the camera roll")
 
-    def get_pixel(self, row, col):
+    def get_pixel(self, row, col, RAYTRACING=True):
         camera_vector = self.get_camera_vector(row, col)
-        returned_ray = ray_tracer(camera_vector, (0, 0, 0))
+        returned_ray = ray_tracer(camera_vector, (0, 0, 0), 0, None, RAYTRACING)
         return (int(value) for value in scalar_V_product(255, returned_ray))
 
     def get_camera_vector(self, row, col):

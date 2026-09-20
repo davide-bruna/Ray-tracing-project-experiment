@@ -40,8 +40,9 @@ def randomize_vector(V, randomness):
     return tuple(x * (random.uniform(1 - randomness, 1 + randomness)) for x in V)
 
 
-def ray_tracer(V, coords, depth=0, last_obj=None):
-    if last_obj != None and last_obj.light == 1:
+def ray_tracer(V, coords, depth=0, last_obj=None, RAYTRACING=True):
+    AMBIENT_LIGHT = 0.3
+    if last_obj is not None and last_obj.light == 1:
         return last_obj.color
     if depth > 5:
         return 0.0, 0.0, 0.0
@@ -64,9 +65,11 @@ def ray_tracer(V, coords, depth=0, last_obj=None):
             closest_obj = obj
             found = True
     if found:
+        if not RAYTRACING:
+            return closest_obj.color
         final_color = sum_vectors(
             scalar_V_product(1.0 - closest_obj.refl,
-                             scalar_V_product(min(1, closest_obj.light + 0.2), closest_obj.color)),
+                             scalar_V_product(min(1, closest_obj.light + AMBIENT_LIGHT), closest_obj.color)),
             scalar_V_product(closest_obj.refl,
                              ray_tracer(closest_collision[1], closest_collision[0], depth + 1, closest_obj))
         )
