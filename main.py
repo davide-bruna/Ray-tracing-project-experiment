@@ -2,13 +2,19 @@ from geometry import Sphere, Rectangle
 from camera_screen import Screen, Camera
 import scene
 
-cool_screen = Screen(640, 480, 1.0, 1)
+cool_screen = Screen(1024, 768, 2.0, 3)
+# light bulb
+scene.objects.append(Sphere((-3, 0, -21), 1, (255, 255, 255), 0, 1, 0))
+# red left wall
+scene.objects.append(Rectangle((-6, -5, -25), (0, 0, 8), (0, 10, 0), (200, 10, 70), 0.5, 0, 0.2))
+# green back wall
+scene.objects.append(Rectangle((-6, -5, -25), (0, 10, 0), (14, 0, 0), (100, 200, 50), 0.6, 0, 0.2))
+# blue floor
+scene.objects.append(Rectangle((-6, -5, -25), (0, 0, 8), (14, 0, 0), (254, 200, 50), 0.6, 0, 0.2))
 
-# scene.objects.append(Sphere((2, -1, -10), 2, (255, 100, 0), 0, 0 , 0))
-scene.objects.append(Sphere((0, 0, -25), 2, (255, 255, 255), 0, 1, 0))
-scene.objects.append(Sphere((5, 5, -10), 3, (255, 10, 255), 0.4, 0.5, 0))
-scene.objects.append(Rectangle((-5, 4, -8), (0, 0, -3), (0, -5, 0), (50, 255, 50), 0.7, 0, 0))
-scene.objects.append(Rectangle((-4, -5, -1), (0, 0, -100), (50, 0, 0), (254, 200, 50), 0.5, 0.3, 0))
-
+# highly reflective sphere
+scene.objects.append(Sphere((5, 3, -15), 2, (255, 10, 255), 0.7, 0.5, 0))
+# another light bulb
+scene.objects.append(Sphere((3, -2, -13), 1, (80, 255, 255), 0.1, 1, 0))
 camera = Camera(cool_screen)
 camera.take_picture()

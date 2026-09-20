@@ -4,7 +4,7 @@ from math_utils import *
 # collision functions return the point of collision and the direction of the bounce
 
 class Sphere:
-    def __init__(self, coordinates, ray, color, refl=0.3, light=0, roughness=0.1):
+    def __init__(self, coordinates, ray, color, refl=0.3, light=0, roughness=0.3):
         self.coordinates = coordinates
         self.ray = ray
         self.color = scalar_V_product(1 / 255, color)
@@ -36,11 +36,11 @@ class Sphere:
         # Normal of surface of the sphere on that point
         sphere_normal = normalize_vector(sub_vectors(collision_point, C))
         reflected_vector = sub_vectors(D, scalar_V_product(2 * dot_product(D, sphere_normal), sphere_normal))
-        return collision_point, reflected_vector
+        return collision_point, randomize_vector(reflected_vector, self.roughness)
 
 
 class Rectangle:
-    def __init__(self, vertex, width_vector, height_vector, color, refl=0.3, light=0, roughness=0.1):
+    def __init__(self, vertex, width_vector, height_vector, color, refl=0.3, light=0, roughness=0.3):
         self.vertex = vertex
         self.width_vector = width_vector
         self.height_vector = height_vector
@@ -74,6 +74,6 @@ class Rectangle:
         if 0 <= dH <= dot_product(self.height_vector, self.height_vector) and 0 <= dW <= dot_product(self.width_vector,
                                                                                                      self.width_vector):
             reflected_vector = sub_vectors(D, scalar_V_product(2 * dot_product(D, N), N))
-            return intersection_with_plane, reflected_vector
+            return intersection_with_plane, randomize_vector(reflected_vector, self.roughness)
         else:
             return None,None

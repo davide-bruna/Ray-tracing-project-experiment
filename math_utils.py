@@ -1,4 +1,5 @@
 import math
+import random
 import sys
 import scene
 
@@ -35,9 +36,15 @@ def normalize_vector(V):
     return V[0] / magnitude, V[1] / magnitude, V[2] / magnitude
 
 
+def randomize_vector(V, randomness):
+    return tuple(x * (random.uniform(1 - randomness, 1 + randomness)) for x in V)
+
+
 def ray_tracer(V, coords, depth=0, last_obj=None):
-    if depth > 5 or (depth > 0 and last_obj.light > 0.7):
-        return scalar_V_product(1.0 - last_obj.refl, scalar_V_product(min(1, last_obj.light + 0.15), last_obj.color))
+    if last_obj != None and last_obj.light == 1:
+        return last_obj.color
+    if depth > 5:
+        return 0.0, 0.0, 0.0
     normalized_V = normalize_vector(V)
     closest_point = sys.float_info.max
     found = False
@@ -59,7 +66,7 @@ def ray_tracer(V, coords, depth=0, last_obj=None):
     if found:
         final_color = sum_vectors(
             scalar_V_product(1.0 - closest_obj.refl,
-                             scalar_V_product(min(1, closest_obj.light + 0.15), closest_obj.color)),
+                             scalar_V_product(min(1, closest_obj.light + 0.2), closest_obj.color)),
             scalar_V_product(closest_obj.refl,
                              ray_tracer(closest_collision[1], closest_collision[0], depth + 1, closest_obj))
         )
