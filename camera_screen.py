@@ -1,4 +1,4 @@
-from math_utils import closest_collision
+from math_utils import ray_tracer, scalar_V_product
 
 
 class Screen:
@@ -27,11 +27,8 @@ class Camera:
 
     def get_pixel(self, row, col):
         camera_vector = self.get_camera_vector(row, col)
-        returned_ray = closest_collision(camera_vector, (0, 0, 0))
-        if returned_ray[1] != None:
-            return returned_ray[1].color
-        else:
-            return 0, 0, 0
+        returned_ray = ray_tracer(camera_vector, (0, 0, 0))
+        return (int(value) for value in scalar_V_product(255, returned_ray))
 
     def get_camera_vector(self, row, col):
         vector = ((self.screen.pixel_size * col + self.screen.pixel_size / 2 - self.screen.x_size / 2),
